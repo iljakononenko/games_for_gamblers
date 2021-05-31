@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CartApp</string>
+    <string name="games_list">GAMES LIST</string>
+    <string name="maps">Maps</string>
+    <string name="refresh">refresh</string>
+    <string name="_1_0_z">1.0 zł</string>
+    <string name="gra">Gra</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="logout">Logout</string>
+    <string name="account">Account</string>
+    <string name="buy">Buy</string>
+    <string name="itemnamedetails">itemName</string>
+    <string name="game">Game</string>
+    <string name="itemprice">itemPrice</string>
+    <string name="example_text">Example text</string>
+    <string name="buy_it">BUY IT</string>
+</resources>

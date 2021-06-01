@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
 
 
     override fun onProductsLoadSuccess(productsLoadListener: List<ProductsModel>?) {
-        adapter = ProductsAdapter(this,productsLoadListener!!,this, accountName)
+        adapter = ProductsAdapter(this,productsLoadListener!!,this)
         recycler_drink.adapter = adapter
     }
 

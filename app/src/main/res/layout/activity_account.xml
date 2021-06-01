@@ -35,7 +35,7 @@
         app:layout_constraintVertical_bias="0.157" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_game_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="E-mail:"

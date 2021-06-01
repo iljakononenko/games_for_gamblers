@@ -13,8 +13,8 @@ import com.example.shoppingapp.model.ProductsModel
 import com.example.shoppingapp.listener.ItemListener
 import java.lang.StringBuilder
 
-class ProductsAdapter(private val context: Context, private val list: List<ProductsModel>, private val itemListener: ItemListener)
-    : RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder>() {
+class Cart_products_adapter(private val context: Context, private val list: List<ProductsModel>, private val itemListener: ItemListener)
+    : RecyclerView.Adapter<Cart_products_adapter.ProductsViewHolder>() {
 
     inner class ProductsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView? = null
@@ -22,17 +22,15 @@ class ProductsAdapter(private val context: Context, private val list: List<Produ
         var txtPrice: TextView? = null
 
         init {
-            imageView = itemView.findViewById(R.id.iv_cart_game) as ImageView
-            txtName = itemView.findViewById(R.id.txtName) as TextView
-            txtPrice = itemView.findViewById(R.id.txtPrice) as TextView
-            itemView.findViewById<LinearLayout>(R.id.game_item_layout).setOnClickListener {
-                itemListener.clickedLong(adapterPosition)
-            }
+            imageView = itemView.findViewById(R.id.iv_cart_icon) as ImageView
+            txtName = itemView.findViewById(R.id.tv_game_name) as TextView
+            txtPrice = itemView.findViewById(R.id.tv_game_price) as TextView
+
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolder {
-        return ProductsViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_game_item, parent, false))
+        return ProductsViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_cart_item, parent, false))
     }
 
     override fun getItemCount(): Int {

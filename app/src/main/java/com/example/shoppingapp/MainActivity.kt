@@ -95,7 +95,8 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
             }
             R.id.game_item ->
             {
-                //TODO:Ilya game
+                val intent = Intent(this, Entertainment_decide::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -192,7 +193,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
 
     fun cartShow(view: View) {
         val intent = Intent(this, CartActivity::class.java).apply {
-            putExtra("user", accountName)
+            putExtra("userName", accountName)
         }
         startActivityForResult(intent, 3)
     }

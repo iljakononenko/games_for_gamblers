@@ -1,12 +1,14 @@
 package com.example.shoppingapp.menu_activities
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.shoppingapp.Cart_products_adapter
 import com.example.shoppingapp.R
+import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
 import com.example.shoppingapp.listener.ProductsLoadListener
 import com.example.shoppingapp.model.ProductsModel
@@ -78,6 +80,10 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
     }
 
     override fun clickedLong(productsModel: Int) {
-
+        val intent = Intent(this, ProductDetailsActivity::class.java).apply {
+            putExtra("itemToShow", productsModel.toString())
+            putExtra("user", accountName)
+        }
+        startActivityForResult(intent, 2)
     }
 }

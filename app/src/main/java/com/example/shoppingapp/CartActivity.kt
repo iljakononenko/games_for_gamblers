@@ -1,9 +1,11 @@
 package com.example.shoppingapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
 import com.example.shoppingapp.listener.ProductsLoadListener
 import com.example.shoppingapp.model.ProductsModel
@@ -19,12 +21,16 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
     lateinit var productsLoadListener: ProductsLoadListener
     private var adapter: Cart_products_adapter? = null
 
+    private lateinit var accountName : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
         productsLoadListener = this
         loadProductsFromFirebase()
+
+        accountName = intent.getStringExtra("userName").toString()
 
         recycler_cart.layoutManager = GridLayoutManager(this, 1)
 
@@ -65,6 +71,10 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
     }
 
     override fun clickedLong(productsModel: Int) {
-
+        val intent = Intent(this, ProductDetailsActivity::class.java).apply {
+            putExtra("itemToShow", productsModel.toString())
+            putExtra("user", accountName)
+        }
+        startActivityForResult(intent, 2)
     }
 }

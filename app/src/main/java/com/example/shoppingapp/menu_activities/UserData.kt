@@ -38,9 +38,9 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
         val preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
 
-        findViewById<TextView>(R.id.tv_name).text = accountName
+        findViewById<TextView>(R.id.tv_name).text = preferences.getString("name", "user name")
         findViewById<TextView>(R.id.tv_email).text = preferences.getString("email", "user e-mail")
-        findViewById<TextView>(R.id.tv_money).text = accountName
+        findViewById<TextView>(R.id.tv_money).text = preferences.getFloat("money", 0f).toString() + " zł"
 
         recycler_user_games.layoutManager = GridLayoutManager(this, 1)
     }

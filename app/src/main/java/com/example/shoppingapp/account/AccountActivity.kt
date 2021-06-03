@@ -11,11 +11,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shoppingapp.MainActivity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.model.User_Model
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 
 
@@ -27,6 +28,7 @@ class AccountActivity : AppCompatActivity() {
     private var accountName : String = ""
     private var accountEmail : String = ""
     private var accountPassword : String = ""
+    private var account_money : Float = 0f
 
     private val MY_PREFS_NAME = "USER"
     private val TAG = "DDF"
@@ -134,7 +136,11 @@ class AccountActivity : AppCompatActivity() {
                 getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit()
 
             editor.putString("name", accountName)
+            editor.putString("email", accountEmail)
+            editor.putFloat("money", account_money)
             editor.apply()
+
+
             startActivity(intent)
 
         }
@@ -143,6 +149,56 @@ class AccountActivity : AppCompatActivity() {
         {
             Toast.makeText(this, "U Didn't signed in", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun write_data_from_account_to_memory()
+    {
+        var i = 0
+        val prefs =  getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE) //check if user logged before
+        val email = prefs.getString("email", "No email defined")
+
+        FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .addListenerForSingleValueEvent(object: ValueEventListener {
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot)
+                    {
+                        if(snapshot.exists())
+                        {
+
+                            for(user_Snapshot in snapshot.children)
+                            {
+
+                                val user_Model = user_Snapshot.getValue(User_Model::class.java)
+                                user_Model!!.key = user_Snapshot.key
+                                user_Model!!.user_index = i
+
+                                if (email.equals(user_Model.email))
+                                {
+                                    val prefs =  getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE)
+                                    var money = user_Model.account_balance
+                                    var user_index = user_Model.user_index
+
+                                    if (money != null && user_index != null)
+                                    {
+                                        prefs.edit().putFloat("money", money).apply()
+                                        prefs.edit().putInt("user_id", user_index).apply()
+                                    }
+
+                                    //Log.d("Test", "email: ${user_Model.email}, money: $money, user_id: $user_index")
+
+                                }
+
+                                //else Log.d("Test", "email: $email isn't the same as ${user_Model.email}")
+                                i++
+                            }
+                        }
+                    }
+                })
     }
 
     private fun correctScreen()

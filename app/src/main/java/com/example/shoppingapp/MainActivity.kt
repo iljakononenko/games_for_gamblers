@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
                 preferences.edit().remove("name").apply()
                 preferences.edit().remove("pass").apply()
                 preferences.edit().remove("email").apply()
+                preferences.edit().remove("money").apply()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 true

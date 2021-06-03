@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,13 +20,24 @@ class Cart_products_adapter(private val context: Context, private val list: List
         var imageView: ImageView? = null
         var txtName: TextView? = null
         var txtPrice: TextView? = null
+        var btn_delete: ImageButton = itemView.findViewById(R.id.btn_remove_from_cart)
 
         init {
             imageView = itemView.findViewById(R.id.iv_cart_icon) as ImageView
             txtName = itemView.findViewById(R.id.tv_game_name) as TextView
             txtPrice = itemView.findViewById(R.id.tv_game_price) as TextView
 
+            itemView.setOnClickListener {
+                itemListener.see_product_details( list.get(adapterPosition).product_id )
+            }
+
+            btn_delete.setOnClickListener {
+                itemListener.delete_product_from_cart( list.get(adapterPosition).product_id )
+            }
+
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolder {

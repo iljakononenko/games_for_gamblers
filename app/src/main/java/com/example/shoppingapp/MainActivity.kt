@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.shoppingapp.account.AccountActivity
 import com.example.shoppingapp.account.LoginActivity
 import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
@@ -188,12 +187,16 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
         FirebaseDatabase.getInstance().getReference("Cart").child(accountName).setValue(cartModel)
     }
 
-    override fun clickedLong(productsModel: Int) {
+    override fun see_product_details(productsModel: Int?) {
         val intent = Intent(this, ProductDetailsActivity::class.java).apply {
             putExtra("itemToShow", productsModel.toString())
             putExtra("user", accountName)
         }
         startActivityForResult(intent, 2)
+    }
+
+    override fun delete_product_from_cart(product_id_to_remove: Int?) {
+
     }
 
     fun cartShow(view: View) {

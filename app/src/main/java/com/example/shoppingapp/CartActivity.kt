@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
 import com.example.shoppingapp.listener.ProductsLoadListener
@@ -118,12 +118,62 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
         Snackbar.make(mainLayout,message!!, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun clickedLong(productsModel: Int) {
+    override fun see_product_details(productsModel: Int?) {
         val intent = Intent(this, ProductDetailsActivity::class.java).apply {
             putExtra("itemToShow", productsModel.toString())
             putExtra("user", accountName)
         }
         startActivityForResult(intent, 2)
+    }
+
+    override fun delete_product_from_cart(product_id_to_remove: Int?) {
+
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(user_id)
+                .child("Products_in_cart")
+                .addListenerForSingleValueEvent(
+                        object: ValueEventListener
+                        {
+                            override fun onCancelled(error: DatabaseError) {
+
+                            }
+
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if(snapshot.exists())
+                                {
+                                    var number_of_items_in_cart = 0
+                                    var key_of_product_to_remove: String? = "null"
+
+                                    for(productSnapshot in snapshot.children)
+                                    {
+                                        val user_product_model = productSnapshot.getValue(User_product_Model::class.java)
+                                        user_product_model!!.key = productSnapshot.key
+
+                                        if (user_product_model.product_id == product_id_to_remove)
+                                        {
+                                            key_of_product_to_remove = productSnapshot.key
+                                        }
+                                        number_of_items_in_cart++
+                                    }
+
+                                    if (key_of_product_to_remove != null && key_of_product_to_remove != "null" && number_of_items_in_cart > 1 )
+                                    {
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(user_id)
+                                                .child("Products_in_cart")
+                                                .child("$key_of_product_to_remove").removeValue()
+                                    }
+                                    else if (key_of_product_to_remove != null && key_of_product_to_remove != "null")
+                                    {
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(user_id)
+                                                .child("Products_in_cart").setValue(0)
+                                    }
+                                    load_products_in_cart()
+                                }
+
+                            }
+                        })
     }
 
     fun buy_all(view: View)

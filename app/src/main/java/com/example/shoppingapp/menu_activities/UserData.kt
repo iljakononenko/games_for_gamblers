@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.shoppingapp.Cart_products_adapter
@@ -19,7 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_cart.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_user_data.*
 
@@ -128,11 +126,15 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
         Snackbar.make(mainLayout,message!!, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun clickedLong(productsModel: Int) {
+    override fun see_product_details(productsModel: Int?) {
         val intent = Intent(this, ProductDetailsActivity::class.java).apply {
             putExtra("itemToShow", productsModel.toString())
             putExtra("user", accountName)
         }
         startActivityForResult(intent, 2)
+    }
+
+    override fun delete_product_from_cart(product_id_to_remove: Int?) {
+
     }
 }

@@ -137,7 +137,7 @@ class ProductDetailsActivity : AppCompatActivity() {
 
                                             // jak znajdziemy odpowiedni produkt w koszyku, inkrementujemy liczbe w tym koszyku
 
-                                            flag_product_amount_incremented = true
+
                                             FirebaseDatabase.getInstance().getReference("Users")
                                                     .child(user_id)
                                                     .child("Products_in_cart")
@@ -145,6 +145,8 @@ class ProductDetailsActivity : AppCompatActivity() {
                                                     //.child(index_of_child.toString()) - dodaje dziecko
                                                     .child("product_amount")
                                                     .setValue(user_product_model.product_amount?.plus(1))
+
+                                            flag_product_amount_incremented = true
                                         }
                                         index_of_child++
                                     }

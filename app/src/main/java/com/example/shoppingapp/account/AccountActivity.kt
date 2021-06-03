@@ -237,7 +237,7 @@ class AccountActivity : AppCompatActivity() {
 
                                     if (money != null && user_index != null)
                                     {
-                                        prefs.edit().putFloat("money", money).apply()
+                                        prefs.edit().putString("money", money).apply()
                                         prefs.edit().putInt("user_id", user_index).apply()
                                     }
 

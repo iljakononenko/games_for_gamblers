@@ -36,11 +36,20 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
         val preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
 
+        user_id = preferences.getInt("user_id", -1).toString()
+
+
         findViewById<TextView>(R.id.tv_name).text = preferences.getString("name", "user name")
         findViewById<TextView>(R.id.tv_email).text = preferences.getString("email", "user e-mail")
-        findViewById<TextView>(R.id.tv_money).text = preferences.getFloat("money", 0f).toString() + " zł"
 
-        user_id = preferences.getInt("user_id", -1).toString()
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(user_id)
+                .child("account_balance").get()
+                .addOnSuccessListener {
+                    var user_money = it.value as String
+                    findViewById<TextView>(R.id.tv_money).text = "$user_money zł"
+                }
+
 
         //Log.d("Test", user_id)
 
@@ -74,6 +83,7 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                     if (user_product_Model.product_id == productModel.product_id )
                                     {
+                                        productModel.quantity = user_product_Model.product_amount
                                         productsModels.add(productModel)
                                     }
                                 }
@@ -116,9 +126,9 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
                 })
     }
 
-    override fun onProductsLoadSuccess(productsLoadListener: List<ProductsModel>?) {
+    override fun onProductsLoadSuccess(bought_products: List<ProductsModel>?) {
 
-        adapter = Cart_products_adapter(this, productsLoadListener!!,this)
+        adapter = Cart_products_adapter(this, bought_products!!,this, false)
         recycler_user_games.adapter = adapter
     }
 

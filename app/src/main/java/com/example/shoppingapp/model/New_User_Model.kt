@@ -8,7 +8,7 @@ data class New_User_Model (
         var email:String? = "email",
         var Products_bought:Int? = 0,
         var Products_in_cart:Int? = 0,
-        var account_balance:Int? = 0
+        var account_balance:Double? = 0.00
 )
 {
     @Exclude

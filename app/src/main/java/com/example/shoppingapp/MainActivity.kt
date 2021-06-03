@@ -143,9 +143,11 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
 
     private fun loadProductsFromFirebase() {
         val productsModels : MutableList<ProductsModel> = ArrayList()
-        FirebaseDatabase.getInstance()
-                .getReference("Game")
-                .addListenerForSingleValueEvent(object: ValueEventListener {
+
+        FirebaseDatabase.getInstance().getReference("Game")
+                .addListenerForSingleValueEvent(
+                object: ValueEventListener
+                {
                     override fun onCancelled(error: DatabaseError) {
                         productsLoadListener.onProductsLoadFailed(error.message)
                     }
@@ -163,6 +165,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
                         }
                     }
                 })
+
     }
 
 

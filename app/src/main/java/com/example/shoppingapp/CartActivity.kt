@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppingapp.details.ProductDetailsActivity
@@ -123,5 +124,13 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
             putExtra("user", accountName)
         }
         startActivityForResult(intent, 2)
+    }
+
+    fun buy_all(view: View)
+    {
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(user_id)
+                .child("Products_in_cart")
+                .setValue(0)
     }
 }

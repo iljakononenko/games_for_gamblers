@@ -40,8 +40,8 @@ class LoginActivity : AppCompatActivity() {
 
         if(name != null && name != "No name defined")
         {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("userName", name)
+            val new_intent = Intent(this, MainActivity::class.java)
+            new_intent.putExtra("userName", name)
 
             FirebaseDatabase.getInstance()
                     .getReference("Users")
@@ -65,21 +65,21 @@ class LoginActivity : AppCompatActivity() {
 
                                     if (email.equals(user_Model.email))
                                     {
-                                        write_data_from_account_to_memory(user_Model)
+                                        write_data_from_account_to_memory(user_Model, new_intent)
                                     }
 
-                                    //else Log.d("Test", "email: $email isn't the same as ${user_Model.email}")
+                                    else Log.d("Test", "email: $email isn't the same as ${user_Model.email}")
                                     i++
                                 }
                             }
                         }
                     })
 
-            startActivity(intent)
+
         }
     }
 
-    fun write_data_from_account_to_memory (user_Model: User_Model)
+    fun write_data_from_account_to_memory (user_Model: User_Model, new_intent : Intent)
     {
         val prefs =  getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE)
         var money = user_Model.account_balance
@@ -92,6 +92,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         Log.d("Test", "email: ${user_Model.email}, money: $money, user_id: $user_index")
+
+        startActivity(new_intent)
     }
 
     /*

@@ -119,9 +119,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
 
     private fun countCartFRomFirebase() {
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_in_cart")
+        Static_object.ref_products_in_cart
                 .addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onCancelled(error: DatabaseError) {
@@ -177,15 +175,6 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
 
     override fun onProductsLoadFailed(message: String?) {
         Snackbar.make(mainLayout,message!!, Snackbar.LENGTH_LONG).show()
-    }
-
-
-    private fun addNewCartToDatabase() {
-        val cartModel  = CartModel()
-        cartModel.key = "12"
-        cartModel.quantity = 0
-        cartModel.totalPrice = (0).toFloat()
-        FirebaseDatabase.getInstance().getReference("Cart").child(accountName).setValue(cartModel)
     }
 
     override fun see_product_details(productsModel: Int?) {

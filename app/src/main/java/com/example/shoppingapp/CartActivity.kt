@@ -94,9 +94,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
     private fun load_products_in_cart() {
         val user_product_models : MutableList<User_product_Model> = ArrayList()
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_in_cart")
+        Static_object.ref_products_in_cart
                 .addListenerForSingleValueEvent(
                         object: ValueEventListener
                         {
@@ -169,9 +167,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
     override fun delete_product_from_cart(product_id_to_remove: Int?) {
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_in_cart")
+        Static_object.ref_products_in_cart
                 .addListenerForSingleValueEvent(
                         object: ValueEventListener
                         {
@@ -199,9 +195,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                     if (key_of_product_to_remove != null && key_of_product_to_remove != "null" && number_of_items_in_cart > 1 )
                                     {
-                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                .child(user_id)
-                                                .child("Products_in_cart")
+                                        Static_object.ref_products_in_cart
                                                 .child("$key_of_product_to_remove")
                                                 .child("product_amount").get().addOnSuccessListener {
 
@@ -209,16 +203,12 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                                     if (number_of_selected_items.toInt() == 1)
                                                     {
-                                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                                .child(user_id)
-                                                                .child("Products_in_cart")
+                                                        Static_object.ref_products_in_cart
                                                                 .child("$key_of_product_to_remove").removeValue()
                                                     }
                                                     else
                                                     {
-                                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                                .child(user_id)
-                                                                .child("Products_in_cart")
+                                                        Static_object.ref_products_in_cart
                                                                 .child("$key_of_product_to_remove")
                                                                 .child("product_amount").setValue( (number_of_selected_items.toInt() - 1) )
                                                     }
@@ -228,9 +218,9 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                     else if (key_of_product_to_remove != null && key_of_product_to_remove != "null")
                                     {
-                                        FirebaseDatabase.getInstance().getReference("Users")
-                                                .child(user_id)
-                                                .child("Products_in_cart").setValue(0)
+                                        Static_object.ref_products_in_cart
+                                                .setValue(0)
+
                                         cart_is_empty = true
                                     }
 
@@ -250,8 +240,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
         }
         else
         {
-            FirebaseDatabase.getInstance().getReference("Users")
-                    .child(user_id)
+            Static_object.ref_current_user
                     .child("account_balance").get()
                     .addOnSuccessListener {
 
@@ -294,9 +283,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
     {
         val products_models : MutableList<ProductsModel> = ArrayList()
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_bought")
+        Static_object.ref_products_bought
                 .addListenerForSingleValueEvent(
                         object: ValueEventListener {
                             override fun onCancelled(error: DatabaseError) {
@@ -324,9 +311,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                                 // jak znajdziemy odpowiedni produkt w koszyku, inkrementujemy liczbe w tym koszyku
 
-                                                FirebaseDatabase.getInstance().getReference("Users")
-                                                        .child(user_id)
-                                                        .child("Products_bought")
+                                                Static_object.ref_products_bought
                                                         .child(user_product_model.key.toString())
                                                         //.child(index_of_child.toString()) - dodaje dziecko
                                                         .child("product_amount")
@@ -342,10 +327,10 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                             Log.d("Test", "Added new game to a bought list!")
 
-                                            val key = FirebaseDatabase.getInstance().getReference("Users")
-                                                    .child(user_id)
-                                                    .child("Products_bought")
-                                                    .push().key
+                                            // pobieramy klucz nowododanej wartosci
+
+                                            val key = Static_object.ref_products_bought.push().key
+
                                             if (key == null) {
                                                 Log.d("Test", "Nope! You can't just shoot a hole into a Mars!(add a product to a bought list)")
                                                 return
@@ -366,9 +351,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                 }
                             }
                         })
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_in_cart")
+        Static_object.ref_products_in_cart
                 .setValue(0)
 
         load_products_in_cart()

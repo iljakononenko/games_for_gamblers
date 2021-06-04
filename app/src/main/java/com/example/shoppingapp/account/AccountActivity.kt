@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shoppingapp.MainActivity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
 import com.example.shoppingapp.model.New_User_Model
 import com.example.shoppingapp.model.New_User_product_Model
 import com.example.shoppingapp.model.User_Model
@@ -254,6 +255,8 @@ class AccountActivity : AppCompatActivity() {
                                 prefs.edit().putInt("user_id", i).apply()
                             }
                         }
+                        Static_object.preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
+                        Static_object.update_data()
                     }
                 })
     }

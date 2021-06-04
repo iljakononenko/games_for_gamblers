@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.shoppingapp.MainActivity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
 import com.example.shoppingapp.menu_activities.UserData
 import com.example.shoppingapp.model.CartModel
 import com.example.shoppingapp.model.New_User_product_Model
@@ -114,9 +115,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         var flag_product_amount_incremented = false
         var index_of_child = 0
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_in_cart")
+        Static_object.ref_products_in_cart
                 .addListenerForSingleValueEvent(
                         object: ValueEventListener
                         {
@@ -138,9 +137,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                                             // jak znajdziemy odpowiedni produkt w koszyku, inkrementujemy liczbe w tym koszyku
 
 
-                                            FirebaseDatabase.getInstance().getReference("Users")
-                                                    .child(user_id)
-                                                    .child("Products_in_cart")
+                                            Static_object.ref_products_in_cart
                                                     .child(user_product_model.key.toString())
                                                     //.child(index_of_child.toString()) - dodaje dziecko
                                                     .child("product_amount")
@@ -155,9 +152,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                                     {
                                         // jak sie nie uda znalezc w koszyku odpowiedni produkt, wtedy musimy dodac go do koszyka
 
-                                        val key = FirebaseDatabase.getInstance().getReference("Users")
-                                                .child(user_id)
-                                                .child("Products_in_cart")
+                                        val key = Static_object.ref_products_in_cart
                                                 .push().key
                                         if (key == null)
                                         {

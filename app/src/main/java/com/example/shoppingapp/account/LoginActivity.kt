@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import com.example.shoppingapp.MainActivity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
 import com.example.shoppingapp.model.CartModel
 import com.example.shoppingapp.model.ProductsModel
 import com.example.shoppingapp.model.User_Model
@@ -26,6 +27,11 @@ class LoginActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        Static_object.preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
+        Static_object.update_data()
+
+        Log.d("Test", Static_object.static_field)
 
         val prefs =  getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE) //check if user logged before
 
@@ -115,4 +121,6 @@ class LoginActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+
+
 }

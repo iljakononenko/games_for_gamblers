@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.shoppingapp.Cart_products_adapter
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
 import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
 import com.example.shoppingapp.listener.ProductsLoadListener
@@ -42,8 +43,7 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
         findViewById<TextView>(R.id.tv_name).text = preferences.getString("name", "user name")
         findViewById<TextView>(R.id.tv_email).text = preferences.getString("email", "user e-mail")
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
+        Static_object.ref_current_user
                 .child("account_balance").get()
                 .addOnSuccessListener {
                     var user_money = it.value as String
@@ -99,9 +99,7 @@ class UserData : AppCompatActivity(), ItemListener, ProductsLoadListener {
     private fun load_bought_products() {
         val user_product_models : MutableList<User_product_Model> = ArrayList()
 
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(user_id)
-                .child("Products_bought")
+        Static_object.ref_products_bought
                 .addListenerForSingleValueEvent(
                 object: ValueEventListener
                 {

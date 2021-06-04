@@ -1,5 +1,6 @@
 package com.example.shoppingapp.entertainment
 
+import android.graphics.Color
 import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,6 @@ class Lotery_recycler_adapter (private val dataSet: List<Int>, private val liste
     inner class ViewPagerViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView)
     {
         val btn_square: Button = itemView.findViewById(R.id.btn_square)
-
     }
 
     interface my_OnItemClickListener
@@ -38,12 +38,16 @@ class Lotery_recycler_adapter (private val dataSet: List<Int>, private val liste
 
     override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
 
+        holder.btn_square.setTextColor(Color.WHITE)
+        holder.btn_square.setBackgroundColor(Color.YELLOW)
         holder.btn_square.text = dataSet[position].toString()
         holder.btn_square.textSize = 0F
         holder.btn_square.setOnClickListener(View.OnClickListener {
             if (button_pressed_counter < 3)
             {
                 holder.btn_square.textSize = 24f
+                holder.btn_square.isClickable = false
+                holder.btn_square.setBackgroundColor(Color.BLACK)
                 button_pressed_counter++
                 listener.check_lotery_result(position)
             }

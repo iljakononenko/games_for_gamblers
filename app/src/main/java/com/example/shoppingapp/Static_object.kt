@@ -13,6 +13,8 @@ class Static_object {
 
         lateinit var user_id: String
 
+        var buy_flag = false
+
         lateinit var ref_products_in_cart: DatabaseReference
         lateinit var ref_products_bought: DatabaseReference
         lateinit var ref_current_user: DatabaseReference

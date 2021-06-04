@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Static_object.preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
+        Static_object.update_data()
+
         val preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
         user_id = preferences.getInt("user_id", -1).toString()
 

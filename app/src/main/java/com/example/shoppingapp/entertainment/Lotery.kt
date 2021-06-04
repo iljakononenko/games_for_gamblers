@@ -1,12 +1,18 @@
 package com.example.shoppingapp.entertainment
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.shoppingapp.Entertainment_decide
+import com.example.shoppingapp.Form_activity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
+import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.activity_lotery.*
 import kotlin.random.Random
 
@@ -15,6 +21,8 @@ class Lotery : AppCompatActivity(), Lotery_recycler_adapter.my_OnItemClickListen
     var button_pressed_counter = 0
     var arraylist_result = ArrayList<Int>()
     var numbers = ArrayList<Int>()
+
+    var flag_won = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,26 +45,49 @@ class Lotery : AppCompatActivity(), Lotery_recycler_adapter.my_OnItemClickListen
 
     override fun check_lotery_result(position: Int) {
 
-        if (button_pressed_counter < 2)
+        arraylist_result.add( numbers.get(position) )
+        button_pressed_counter++
+
+        if (button_pressed_counter >= 3)
         {
-            arraylist_result.add(numbers.get(position))
-            button_pressed_counter++
-        }
-        else
-        {
+            //Log.d("Test", "${arraylist_result[0]}, ${arraylist_result[1]}, ${arraylist_result[2]}")
+
             var tv_lotery_result = findViewById<TextView>(R.id.tv_lotery_result)
 
-            if (arraylist_result.get(0) == arraylist_result.get(1) && arraylist_result.get(0) == arraylist_result.get(2))
+            if (arraylist_result[0] == arraylist_result[1] && arraylist_result[1] == arraylist_result[2])
             {
 
                 tv_lotery_result.text = "You won! :)"
                 tv_lotery_result.textSize = 24f
+
+                flag_won = true
             }
             else
             {
                 tv_lotery_result.text = "You lost ;("
                 tv_lotery_result.textSize = 24f
             }
+
+            val handler = Handler()
+            handler.postDelayed( {
+
+                var next_intent: Intent
+                if (Static_object.buy_flag)
+                {
+                    next_intent = Intent(this, Form_activity::class.java)
+                }
+                else
+                {
+                    next_intent = Intent(this, Entertainment_decide::class.java)
+                }
+
+                next_intent.putExtra("flag_won", flag_won)
+
+                startActivity(next_intent)
+
+
+            }, 5000)
+
 
         }
 

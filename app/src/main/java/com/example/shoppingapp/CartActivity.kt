@@ -276,6 +276,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                     }
 
         }
+        Static_object.buy_flag = true
 
     }
 

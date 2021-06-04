@@ -30,12 +30,9 @@ class Cart_products_adapter(private val context: Context, private val list: List
             txtName = itemView.findViewById(R.id.tv_game_name) as TextView
             txtPrice = itemView.findViewById(R.id.tv_game_price) as TextView
 
-            tv_quantity.visibility = View.INVISIBLE
-
             if (!cart_flag)
             {
                 btn_delete.visibility = View.INVISIBLE
-                tv_quantity.visibility = View.VISIBLE
 
             }
 

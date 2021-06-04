@@ -77,6 +77,8 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
                                             if (user_product_Model.product_id == productModel.product_id )
                                             {
+                                                Log.d("Test", "Still calls!")
+                                                productModel.quantity = user_product_Model.product_amount
                                                 productsModels.add(productModel)
                                             }
                                         }
@@ -141,7 +143,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
 
             for (product: ProductsModel in user_product_models)
             {
-                sum_of_products += product.price!!.toFloat()
+                sum_of_products += (product.price!!.toFloat() * product.quantity!!.toFloat())
             }
 
             adapter = Cart_products_adapter(this, user_product_models,this, true)
@@ -192,7 +194,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                         {
                                             key_of_product_to_remove = productSnapshot.key
                                         }
-                                        number_of_items_in_cart++
+                                        number_of_items_in_cart += user_product_model.product_amount!!
                                     }
 
                                     if (key_of_product_to_remove != null && key_of_product_to_remove != "null" && number_of_items_in_cart > 1 )
@@ -200,8 +202,30 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                         FirebaseDatabase.getInstance().getReference("Users")
                                                 .child(user_id)
                                                 .child("Products_in_cart")
-                                                .child("$key_of_product_to_remove").removeValue()
+                                                .child("$key_of_product_to_remove")
+                                                .child("product_amount").get().addOnSuccessListener {
+
+                                                    var number_of_selected_items = it.value as Long
+
+                                                    if (number_of_selected_items.toInt() == 1)
+                                                    {
+                                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                                .child(user_id)
+                                                                .child("Products_in_cart")
+                                                                .child("$key_of_product_to_remove").removeValue()
+                                                    }
+                                                    else
+                                                    {
+                                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                                .child(user_id)
+                                                                .child("Products_in_cart")
+                                                                .child("$key_of_product_to_remove")
+                                                                .child("product_amount").setValue( (number_of_selected_items.toInt() - 1) )
+                                                    }
+
+                                                }
                                     }
+
                                     else if (key_of_product_to_remove != null && key_of_product_to_remove != "null")
                                     {
                                         FirebaseDatabase.getInstance().getReference("Users")
@@ -209,6 +233,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                                 .child("Products_in_cart").setValue(0)
                                         cart_is_empty = true
                                     }
+
                                     load_products_in_cart()
                                 }
 
@@ -305,7 +330,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                                         .child(user_product_model.key.toString())
                                                         //.child(index_of_child.toString()) - dodaje dziecko
                                                         .child("product_amount")
-                                                        .setValue(user_product_model.product_amount?.plus(1))
+                                                        .setValue(user_product_model.product_amount?.plus(product_in_cart.product_amount!!))
 
                                                 flag_product_amount_incremented = true
                                             }
@@ -326,7 +351,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                                                 return
                                             }
 
-                                            val new_product_to_bought_list = New_User_product_Model(product_in_cart.product_id)
+                                            val new_product_to_bought_list = New_User_product_Model(product_in_cart.product_id, product_in_cart.product_amount)
                                             val new_product_to_bought_list_values = new_product_to_bought_list.toMap()
 
                                             val childUpdates = hashMapOf<String, Any>(

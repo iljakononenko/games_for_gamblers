@@ -240,6 +240,43 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
         }
         else
         {
+            Static_object.buy_flag = true
+            val buy_intent = Intent(this, Entertainment_decide::class.java)
+
+            startActivityForResult(buy_intent, 1234)
+
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null)
+        {
+            if (requestCode == 1234)
+            {
+                if ( data.getBooleanExtra("flag_result", false) )
+                {
+                    submit_purchase_from_cart()
+                    Static_object.products_bought = false
+                    Static_object.buy_flag = false
+                    Static_object.user_discount = false
+                }
+            }
+        }
+    }
+
+    fun submit_purchase_from_cart()
+    {
+
+        if (Static_object.user_discount)
+        {
+            sum_of_products = (sum_of_products * 0.9).toFloat()
+        }
+
+        if (Static_object.products_bought)
+        {
             Static_object.ref_current_user
                     .child("account_balance").get()
                     .addOnSuccessListener {
@@ -274,10 +311,7 @@ class CartActivity : AppCompatActivity(), ItemListener, ProductsLoadListener {
                             Toast.makeText(this, "Sorry, you don't have enough money!", Toast.LENGTH_SHORT).show()
                         }
                     }
-
         }
-        Static_object.buy_flag = true
-
     }
 
     fun move_from_cart_to_bought(products_in_cart : MutableList<User_product_Model>)

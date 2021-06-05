@@ -1,5 +1,6 @@
 package com.example.shoppingapp.entertainment
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.opengl.Visibility
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shoppingapp.R
+import com.example.shoppingapp.Static_object
 import com.example.shoppingapp.game_result
 import kotlinx.android.synthetic.main.activity_game.*
 import kotlin.random.Random
@@ -32,6 +34,9 @@ class Game : AppCompatActivity() {
         tv_to_click.setOnClickListener{ tv_to_click_clicked() }
 
         btn_next_try.setBackgroundColor(Color.BLUE)
+
+        // remaking button from reset attempts to skip game
+        btn_reset_attempts.text = "Skip"
 
         btn_see_result.isClickable = false
         btn_see_result.visibility = View.INVISIBLE
@@ -96,6 +101,17 @@ class Game : AppCompatActivity() {
 
     fun reset_attempts (v : View)
     {
+        /** Skip button functionality**/
+
+        for (i in 0..4)
+        {
+            reaction_results[i] = 1000
+        }
+
+        see_result(v)
+
+        /*
+        reset attempts functionality
         for (i in 0..4)
         {
             reaction_results[i] = 0
@@ -104,6 +120,7 @@ class Game : AppCompatActivity() {
         index_of_attempts = 1
         tv_attempts.text = "Attempt $index_of_attempts/5"
         start_attempt()
+         */
     }
 
     fun start_attempt ()
@@ -171,7 +188,26 @@ class Game : AppCompatActivity() {
 
         val intent = Intent(this, game_result::class.java)
         intent.putExtra("avg_reaction", avg_value)
-        startActivity(intent)
+        startActivityForResult(intent, 1113)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null)
+        {
+            if (Static_object.buy_flag && requestCode == 1113)
+            {
+                val result_intent = Intent()
+
+                result_intent.putExtra("flag_result", data.getBooleanExtra("flag_result", false))
+
+                setResult(Activity.RESULT_OK, result_intent)
+            }
+        }
+
+        finish()
     }
 
 }

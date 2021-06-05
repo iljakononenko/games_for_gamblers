@@ -1,5 +1,6 @@
 package com.example.shoppingapp.entertainment
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -71,20 +72,19 @@ class Lotery : AppCompatActivity(), Lotery_recycler_adapter.my_OnItemClickListen
             val handler = Handler()
             handler.postDelayed( {
 
-                var next_intent: Intent
                 if (Static_object.buy_flag)
                 {
+                    var next_intent: Intent
                     next_intent = Intent(this, Form_activity::class.java)
+                    next_intent.putExtra("flag_won", flag_won)
+
+                    startActivityForResult(next_intent, 12345)
                 }
+
                 else
                 {
-                    next_intent = Intent(this, Entertainment_decide::class.java)
+                    finish()
                 }
-
-                next_intent.putExtra("flag_won", flag_won)
-
-                startActivity(next_intent)
-
 
             }, 5000)
 
@@ -92,5 +92,23 @@ class Lotery : AppCompatActivity(), Lotery_recycler_adapter.my_OnItemClickListen
         }
 
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null)
+        {
+            if (Static_object.buy_flag && requestCode == 12345)
+            {
+                val result_intent = Intent()
+
+                result_intent.putExtra("flag_result", data.getBooleanExtra("flag_result", false))
+
+                setResult(Activity.RESULT_OK, result_intent)
+            }
+        }
+
+        finish()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shoppingapp
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,7 +23,7 @@ class game_result : AppCompatActivity() {
             avg_value = intent.getIntExtra("avg_reaction", 0)
         }
 
-        if (avg_value < 400)
+        if (avg_value < 380)
         {
             flag_won = true
             tv_result_greeting.text = "Congratulations!"
@@ -39,18 +40,40 @@ class game_result : AppCompatActivity() {
 
     fun after_result(view: View)
     {
-        var next_intent: Intent
+
         if (Static_object.buy_flag)
         {
+
+            var next_intent: Intent
             next_intent = Intent(this, Form_activity::class.java)
+            next_intent.putExtra("flag_won", flag_won)
+
+            startActivityForResult(next_intent,1112)
         }
+
         else
         {
-            next_intent = Intent(this, Entertainment_decide::class.java)
+            finish()
         }
 
-        next_intent.putExtra("flag_won", flag_won)
 
-        startActivity(next_intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null)
+        {
+            if (Static_object.buy_flag && requestCode == 1112)
+            {
+                val result_intent = Intent()
+
+                result_intent.putExtra("flag_result", data.getBooleanExtra("flag_result", false))
+
+                setResult(Activity.RESULT_OK, result_intent)
+            }
+        }
+
+        finish()
     }
 }

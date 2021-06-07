@@ -26,7 +26,7 @@ class ProductsAdapter(private val context: Context, private val list: List<Produ
             txtName = itemView.findViewById(R.id.txtName) as TextView
             txtPrice = itemView.findViewById(R.id.txtPrice) as TextView
             itemView.findViewById<LinearLayout>(R.id.game_item_layout).setOnClickListener {
-                itemListener.clickedLong(adapterPosition)
+                itemListener.see_product_details(adapterPosition)
             }
         }
     }

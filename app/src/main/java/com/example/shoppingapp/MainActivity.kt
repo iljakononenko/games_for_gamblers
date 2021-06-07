@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.shoppingapp.account.AccountActivity
 import com.example.shoppingapp.account.LoginActivity
 import com.example.shoppingapp.details.ProductDetailsActivity
 import com.example.shoppingapp.listener.ItemListener
@@ -18,6 +17,7 @@ import com.example.shoppingapp.menu_activities.MapsActivity
 import com.example.shoppingapp.menu_activities.UserData
 import com.example.shoppingapp.model.CartModel
 import com.example.shoppingapp.model.ProductsModel
+import com.example.shoppingapp.model.User_product_Model
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
     private var adapter: ProductsAdapter? = null
     private lateinit var accountName : String
     private var MY_PREFS_NAME = "USER"
+    private lateinit var user_id : String
 
     override fun onStart() {
         super.onStart()
@@ -42,6 +43,13 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Static_object.preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
+        Static_object.update_data()
+
+        val preferences = getSharedPreferences("USER", Context.MODE_PRIVATE)
+        user_id = preferences.getInt("user_id", -1).toString()
+
         accountName = intent.getStringExtra("userName").toString()
         init()
         loadProductsFromFirebase()
@@ -81,6 +89,8 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
                 preferences.edit().remove("name").apply()
                 preferences.edit().remove("pass").apply()
                 preferences.edit().remove("email").apply()
+                preferences.edit().remove("money").apply()
+                preferences.edit().remove("user_id").apply()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 true
@@ -95,7 +105,8 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
             }
             R.id.game_item ->
             {
-                //TODO:Ilya game
+                val intent = Intent(this, Entertainment_decide::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -110,40 +121,35 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
     }
 
     private fun countCartFRomFirebase() {
-        FirebaseDatabase.getInstance()
-            .getReference("Cart")
-            .child(accountName)
-            .addValueEventListener(object : ValueEventListener {
+
+        Static_object.ref_products_in_cart
+                .addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("onCancelled", " cancelled")
+
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                try {
-                    val badgeData = snapshot.getValue<CartModel>(CartModel::class.java)
-                    if (badgeData != null) {
-                        try {
-                            badge!!.setNumber(badgeData.quantity)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    } else {
-                        badge!!.setNumber(0)
-                        addNewCartToDatabase()
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+
+                var number_of_items_in_cart = 0
+
+                for (product_in_bought_list in snapshot.children)
+                {
+                    number_of_items_in_cart += product_in_bought_list.getValue(User_product_Model::class.java)?.product_amount!!.toInt()
                 }
+
+                badge!!.setNumber(number_of_items_in_cart)
             }
         })
     }
 
     private fun loadProductsFromFirebase() {
         val productsModels : MutableList<ProductsModel> = ArrayList()
-        FirebaseDatabase.getInstance()
-                .getReference("Game")
-                .addListenerForSingleValueEvent(object: ValueEventListener {
+
+        FirebaseDatabase.getInstance().getReference("Game")
+                .addListenerForSingleValueEvent(
+                object: ValueEventListener
+                {
                     override fun onCancelled(error: DatabaseError) {
                         productsLoadListener.onProductsLoadFailed(error.message)
                     }
@@ -161,6 +167,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
                         }
                     }
                 })
+
     }
 
 
@@ -173,16 +180,7 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
         Snackbar.make(mainLayout,message!!, Snackbar.LENGTH_LONG).show()
     }
 
-
-    private fun addNewCartToDatabase() {
-        val cartModel  = CartModel()
-        cartModel.key = "12"
-        cartModel.quantity = 0
-        cartModel.totalPrice = (0).toFloat()
-        FirebaseDatabase.getInstance().getReference("Cart").child(accountName).setValue(cartModel)
-    }
-
-    override fun clickedLong(productsModel: Int) {
+    override fun see_product_details(productsModel: Int?) {
         val intent = Intent(this, ProductDetailsActivity::class.java).apply {
             putExtra("itemToShow", productsModel.toString())
             putExtra("user", accountName)
@@ -190,9 +188,13 @@ class MainActivity : AppCompatActivity(), ProductsLoadListener,
         startActivityForResult(intent, 2)
     }
 
+    override fun delete_product_from_cart(product_id_to_remove: Int?) {
+
+    }
+
     fun cartShow(view: View) {
         val intent = Intent(this, CartActivity::class.java).apply {
-            putExtra("user", accountName)
+            putExtra("userName", accountName)
         }
         startActivityForResult(intent, 3)
     }

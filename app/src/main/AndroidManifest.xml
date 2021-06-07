@@ -17,7 +17,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CartApp">
-        <activity android:name=".CartActivity"></activity>
+        <activity android:name=".Form_activity"></activity>
+        <activity android:name=".game_result" />
+        <activity android:name=".entertainment.Game" />
+        <activity android:name=".entertainment.Lotery" />
+        <activity android:name=".Entertainment_decide" />
+        <activity android:name=".CartActivity" />
         <activity android:name=".menu_activities.UserData" />
         <activity android:name=".account.AccountActivity" />
         <activity android:name=".account.LoginActivity">
